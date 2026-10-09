@@ -1,0 +1,17 @@
+{
+  "name": "vroooom-docs",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Documentation for vroooom - Zero-knowledge vehicle tracking",
+  "scripts": {
+    "dev": "vitepress dev .",
+    "build": "vitepress build .",
+    "preview": "vitepress preview ."
+  },
+  "devDependencies": {
+    "mermaid": "^10.6.1",
+    "vitepress": "^1.0.0",
+    "vitepress-plugin-mermaid": "^2.0.16"
+  }
+}
