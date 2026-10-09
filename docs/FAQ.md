@@ -115,7 +115,7 @@ See [`docs/DEPLOYMENT.md`](DEPLOYMENT.md).
 
 ### How to contribute ?
 
-See [`CONTRIBUTING.md`](../CONTRIBUTING.md). Fork, `feature/*` branch, PR.
+See the [CONTRIBUTING.md](https://github.com/kuroidoruido/vroooom/blob/main/CONTRIBUTING.md) on GitHub. Fork, `feature/*` branch, PR.
 
 ### Where is the source code ?
 

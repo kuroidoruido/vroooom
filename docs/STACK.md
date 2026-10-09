@@ -2230,7 +2230,7 @@ docs/
 
 ### Configuration
 
-See **[`docs/.vitepress/config.ts`](../.vitepress/config.ts)** for the complete configuration (nav, sidebar, theme, Mermaid plugin).
+See **[`.vitepress/config.ts`](.vitepress/config.ts)** for the complete configuration (nav, sidebar, theme, Mermaid plugin).
 
 ### Mermaid Diagrams
 
@@ -2265,7 +2265,7 @@ flowchart LR
 
 ### Scripts
 
-See **[`docs/package.json`](../package.json)** for dependencies and scripts (`dev`, `build`, `preview`).
+See **[`package.json`](package.json)** for dependencies and scripts (`dev`, `build`, `preview`).
 
 ### Deployment
 
@@ -2289,7 +2289,7 @@ npm run build
 
 **GitHub Pages (auto-deploy) :**
 
-See **[`.github/workflows/docs.yml`](../../.github/workflows/docs.yml)** — auto-deploys on push to `main` when `docs/**` changes.
+See **[`.github/workflows/docs.yml`](https://github.com/kuroidoruido/vroooom/blob/main/.github/workflows/docs.yml)** — auto-deploys on push to `main` when `docs/**` changes.
 
 **Configuration GitHub Pages (Settings → Pages) :**
 1. Source : **GitHub Actions** (pas "Deploy from a branch")
