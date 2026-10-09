@@ -2,6 +2,8 @@
 
 Complete definition of languages, frameworks, and libraries for each component.
 
+**Note on configuration files** : When a config file already exists in the repo (e.g., `docs/package.json`, `.github/workflows/docs.yml`), this document links to it instead of duplicating its content. Files that don't exist yet are shown as reference examples to be created during project initialization.
+
 ## Table of contents
 
 - [Overview](#overview)
@@ -2226,97 +2228,9 @@ docs/
     └── logo.svg
 ```
 
-### Configuration (`docs/.vitepress/config.ts`)
+### Configuration
 
-```typescript
-import { defineConfig } from 'vitepress'
-import { withMermaid } from 'vitepress-plugin-mermaid'
-
-export default withMermaid(defineConfig({
-  title: 'vroooom',
-  description: 'Zero-knowledge vehicle tracking',
-  lang: 'en-US',
-
-  // Clean URLs (no .html)
-  cleanUrls: true,
-
-  // Theme
-  themeConfig: {
-    nav: [
-      { text: 'Home', link: '/' },
-      { text: 'Documentation', link: '/MAIN' },
-      { text: 'GitHub', link: 'https://github.com/kuroidoruido/vroooom' }
-    ],
-
-    sidebar: [
-      {
-        text: 'Getting Started',
-        items: [
-          { text: 'Overview', link: '/MAIN' },
-          { text: 'Architecture', link: '/ARCHI' },
-          { text: 'Tech Stack', link: '/STACK' },
-          { text: 'Roadmap', link: '/ROADMAP' },
-        ]
-      },
-      {
-        text: 'Technical',
-        items: [
-          { text: 'Security', link: '/SECURITY' },
-          { text: 'Data Models', link: '/DATA' },
-          { text: 'API Reference', link: '/API' },
-          { text: 'Business Rules', link: '/BUSINESS' },
-        ]
-      },
-      {
-        text: 'Guides',
-        items: [
-          { text: 'Development', link: '/DEVELOPMENT' },
-          { text: 'Deployment', link: '/DEPLOYMENT' },
-          { text: 'Testing', link: '/TESTING' },
-        ]
-      },
-      {
-        text: 'Resources',
-        items: [
-          { text: 'FAQ', link: '/FAQ' },
-          { text: 'Lexicon', link: '/LEXICON' },
-        ]
-      }
-    ],
-
-    socialLinks: [
-      { icon: 'github', link: 'https://github.com/kuroidoruido/vroooom' }
-    ],
-
-    footer: {
-      message: 'Released under the GPL v3 License.',
-      copyright: 'Copyright © 2026 vroooom contributors'
-    },
-
-    editLink: {
-      pattern: 'https://github.com/kuroidoruido/vroooom/edit/main/docs/:path',
-      text: 'Edit this page on GitHub'
-    },
-
-    lastUpdated: {
-      text: 'Updated at',
-      formatOptions: {
-        dateStyle: 'medium',
-        timeStyle: 'short'
-      }
-    }
-  },
-
-  // Markdown config
-  markdown: {
-    lineNumbers: true,
-    theme: {
-      light: 'github-light',
-      dark: 'github-dark'
-    }
-  }
-}))
-```
+See **[`docs/.vitepress/config.ts`](../.vitepress/config.ts)** for the complete configuration (nav, sidebar, theme, Mermaid plugin).
 
 ### Mermaid Diagrams
 
@@ -2349,27 +2263,9 @@ flowchart LR
 | **Tables** | Native Markdown tables |
 | **Admonitions** | `::: tip`, `::: warning`, `::: danger` |
 
-### Scripts (`docs/package.json`)
+### Scripts
 
-```json
-{
-  "name": "vroooom-docs",
-  "version": "0.1.0",
-  "private": true,
-  "type": "module",
-  "scripts": {
-    "dev": "vitepress dev .",
-    "build": "vitepress build .",
-    "preview": "vitepress preview ."
-  },
-  "devDependencies": {
-    "vitepress": "^1.0.0",
-    "mermaid": "^10.6.1",
-    "vitepress-plugin-mermaid": "^2.0.16",
-    "vue": "^3.4.0"
-  }
-}
-```
+See **[`docs/package.json`](../package.json)** for dependencies and scripts (`dev`, `build`, `preview`).
 
 ### Deployment
 
@@ -2391,30 +2287,15 @@ npm run build
 | **Static hosting** | Copy `dist/` to server | Any static file server (Nginx, Apache, Caddy) |
 | **Cloudflare Pages** | Connect repo | Free, fast CDN |
 
-**GitHub Pages example (`.github/workflows/docs.yml`) :**
-```yaml
-name: Deploy Docs
+**GitHub Pages (auto-deploy) :**
 
-on:
-  push:
-    branches: [main]
-    paths:
-      - 'docs/**'
+See **[`.github/workflows/docs.yml`](../../.github/workflows/docs.yml)** — auto-deploys on push to `main` when `docs/**` changes.
 
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-      - run: cd docs && npm ci && npm run build
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: docs/.vitepress/dist
-      - uses: actions/deploy-pages@v4
-```
+**Configuration GitHub Pages (Settings → Pages) :**
+1. Source : **GitHub Actions** (pas "Deploy from a branch")
+2. Le workflow se déclenche automatiquement sur push dans `docs/`
+
+**URL :** `https://kuroidoruido.github.io/vroooom/`
 
 ### Custom Theme (Optional)
 
