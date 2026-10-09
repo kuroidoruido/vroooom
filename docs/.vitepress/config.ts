@@ -6,6 +6,9 @@ export default withMermaid(defineConfig({
   description: 'Zero-knowledge vehicle tracking application',
   lang: 'en-US',
 
+  // Base URL for GitHub Pages (https://kuroidoruido.github.io/vroooom/)
+  base: '/vroooom/',
+
   // Source directory (current folder)
   srcDir: '.',
 
