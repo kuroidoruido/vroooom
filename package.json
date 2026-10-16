@@ -33,7 +33,7 @@
     "typecheck": "npm run typecheck --workspaces --if-present",
     "clean": "rm -rf node_modules */node_modules */*/node_modules",
     "clean:all": "npm run clean && cd server && cargo clean",
-    "prepare": "husky install"
+    "prepare": "husky install || true"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.0.0",

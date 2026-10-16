@@ -25,6 +25,12 @@ See [`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md) for the full setup.
 git clone https://github.com/YOUR-USERNAME/vroooom.git
 cd vroooom
 git remote add upstream https://github.com/kuroidoruido/vroooom.git
+
+# Install dependencies (workspaces)
+npm install
+
+# Install git hooks (husky)
+npx husky install
 ```
 
 ### 2. Create a branch
