@@ -1,0 +1,37 @@
+node_modules/
+dist/
+coverage/
+*.log
+
+# Rust
+target/
+
+# Angular
+.angular/
+
+# VitePress
+.vitepress/dist
+.vitepress/cache
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+certbot/
+
+# Data (server)
+data/
+server/data/
+server/data-dev/

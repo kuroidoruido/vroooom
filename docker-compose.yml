@@ -1,0 +1,59 @@
+version: "3.8"
+
+services:
+  vroooom-server:
+    build: ./server
+    # image: ghcr.io/kuroidoruido/vroooom-server:latest
+    container_name: vroooom-server
+    restart: unless-stopped
+    environment:
+      - FEATURE_ACCOUNT_CREATION=${FEATURE_ACCOUNT_CREATION:-false}
+      - DATA_DIR=/data
+      - PORT=8080
+      - RUST_LOG=${RUST_LOG:-info}
+      - ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-*}
+    volumes:
+      - ./data:/data
+    expose:
+      - "8080"
+    networks:
+      - vroooom-network
+    user: "1000:1000"
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:8080/api/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+
+  nginx:
+    image: nginx:alpine
+    container_name: vroooom-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./certbot/conf:/etc/letsencrypt:ro
+      - ./certbot/www:/var/www/certbot:ro
+    networks:
+      - vroooom-network
+    depends_on:
+      - vroooom-server
+
+  certbot:
+    image: certbot/certbot:latest
+    container_name: vroooom-certbot
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+
+networks:
+  vroooom-network:
+    driver: bridge

@@ -1,0 +1,62 @@
+{
+  "name": "vroooom-monorepo",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Zero-knowledge vehicle tracking - monorepo",
+  "license": "GPL-3.0",
+  "workspaces": [
+    "shared",
+    "web",
+    "mobile",
+    "docs"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm:dev:*\"",
+    "dev:shared": "npm run dev -w shared --if-present",
+    "dev:web": "npm run dev -w web --if-present",
+    "dev:mobile": "npm run start -w mobile --if-present",
+    "dev:docs": "npm run dev -w docs",
+    "dev:server": "cd server && cargo watch -x run --if-present",
+    "build": "npm run build --workspaces --if-present",
+    "build:shared": "npm run build -w shared",
+    "build:web": "npm run build -w web --if-present",
+    "build:docs": "npm run build -w docs",
+    "build:server": "cd server && cargo build --release",
+    "test": "npm run test --workspaces --if-present",
+    "test:shared": "npm run test -w shared",
+    "test:web": "npm run test -w web --if-present",
+    "test:mobile": "npm run test -w mobile --if-present",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "format": "biome format --write .",
+    "format:check": "biome format .",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "clean": "rm -rf node_modules */node_modules */*/node_modules",
+    "clean:all": "npm run clean && cd server && cargo clean",
+    "prepare": "husky install"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.0.0",
+    "concurrently": "^9.0.0",
+    "husky": "^9.0.0",
+    "lint-staged": "^15.0.0",
+    "typescript": "^7.0.0"
+  },
+  "engines": {
+    "node": ">=22.0.0",
+    "npm": ">=10.0.0"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "biome check --write",
+      "biome format --write"
+    ],
+    "*.{json,md}": [
+      "biome format --write"
+    ]
+  },
+  "allowScripts": {
+    "esbuild@0.27.7": true,
+    "esbuild@0.21.5": true
+  }
+}

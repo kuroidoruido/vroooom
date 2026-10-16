@@ -2,6 +2,8 @@
 
 This file contains the basic rules for working on this repo. For full details, see the [`/docs`](./docs/MAIN.md) folder.
 
+**Note for mobile development :** See [`mobile/AGENTS.md`](./mobile/AGENTS.md) for ng-native specific rules (native components, styling, testing).
+
 ## Technical stack
 
 | Component | Technology | Justification |

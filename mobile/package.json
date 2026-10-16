@@ -1,0 +1,48 @@
+{
+  "name": "@vroooom/mobile",
+  "version": "1.0.0",
+  "license": "GPL-3.0",
+  "main": "src/main.ts",
+  "dependencies": {
+    "@ng-native/components": "0.13.0",
+    "@ng-native/device": "0.13.0",
+    "@ng-native/fabric": "0.13.0",
+    "@ng-native/metro": "0.13.0",
+    "@ng-native/platform": "0.13.0",
+    "@vroooom/shared": "*",
+    "@angular/common": "^22.0.0",
+    "@angular/core": "^22.0.0",
+    "expo": "~57.0.26",
+    "expo-constants": "~18.0.0",
+    "expo-sqlite": "~16.0.0",
+    "expo-status-bar": "~57.0.1",
+    "expo-system-ui": "~57.0.4",
+    "react": "19.2.3",
+    "react-native": "0.86.3",
+    "react-native-safe-area-context": "~5.7.0"
+  },
+  "devDependencies": {
+    "@angular/compiler-cli": "^22.0.0",
+    "@babel/core": "^7.29.7",
+    "@biomejs/biome": "^2.0.0",
+    "@ng-native/testing": "0.13.0",
+    "@types/react": "~19.2.2",
+    "typescript": "~6.0.3",
+    "vitest": "^5.0.0"
+  },
+  "scripts": {
+    "start": "expo start",
+    "dev": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "node -e \"console.error('This app targets iOS and Android: use npm start, npm run ios or npm run android.'); process.exit(1)\"",
+    "typecheck": "node metro.config.js && ngc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "biome check src",
+    "lint:fix": "biome check --write src",
+    "format": "biome format --write src"
+  },
+  "private": true
+}
+

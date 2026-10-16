@@ -22,7 +22,7 @@ Complete definition of languages, frameworks, and libraries for each component.
 | Component | Language | Framework/Runtime | Key Libraries |
 |-----------|----------|-------------------|---------------|
 | **Server** | Rust 1.99+ | Axum + Tokio | serde, tower-http, tracing, sha2, uuid |
-| **Shared Core** | TypeScript 7+ | — (pure lib) | libsodium.js, argon2-browser, vitest, fast-check, biome |
+| **Shared Core** | TypeScript 7+ | — (pure lib) | libsodium-wrappers, argon2-browser, vitest, fast-check, biome |
 | **Web** | TypeScript 7+ | Angular 22+ (PWA) | Vitest, Playwright, Signal Forms, IndexedDB native |
 | **Mobile** | TypeScript 7+ | ng-native (Angular + Expo) | @ng-native/*, expo-sqlite, vitest, Maestro |
 | **Docs** | Markdown | VitePress | vitepress, mermaid |
@@ -204,7 +204,7 @@ impl IntoResponse for StorageError {
 - Stores `authHash` (SHA-256 of MasterKey, computed client-side)
 - Stores/retrieves hex-encoded encrypted blobs (opaque to the server)
 
-**No need for :** AES, RSA, Argon2 (all client-side via libsodium.js).
+**No need for :** AES, RSA, Argon2 (all client-side via libsodium-wrappers).
 
 ### Utilities
 
@@ -395,18 +395,18 @@ cargo build --release
 
 | Library | Version | Purpose | Why |
 |---------|---------|---------|-----|
-| **libsodium.js** | 0.7.15+ | XChaCha20-Poly1305 encryption/decryption | Audited, standard (Signal, etc.), WASM, works in browser + Node |
+| **libsodium-wrappers** | 0.7.15+ | XChaCha20-Poly1305 encryption/decryption | Audited, standard (Signal, etc.), WASM, works in browser + Node, types included |
 | **argon2-browser** | 1.18+ | Argon2id KDF (password → MasterKey) | WASM, configurable memory/iterations/parallelism, works in browser + React Native |
 | `@noble/hashes` | 1.4+ | SHA-256 (for authHash verification) | Pure JS, audited, lightweight alternative to libsodium for hashing |
 
-**Why libsodium.js over @noble/ciphers :**
+**Why libsodium-wrappers over @noble/ciphers :**
 - libsodium is **audited** (used by Signal, Proton, etc.)
 - Provides both encryption (XChaCha20-Poly1305) and hashing
 - WASM performance is excellent
 - Single dependency for crypto primitives
 
 **Why argon2-browser :**
-- libsodium.js has limited Argon2 support in WASM (no memory-hard tuning in browser)
+- libsodium-wrappers has limited Argon2 support in WASM (no memory-hard tuning in browser)
 - argon2-browser is specifically designed for browser/React Native with full parameter control (m=21MB, t=2, p=2)
 
 **Crypto module structure :**
@@ -414,7 +414,7 @@ cargo build --release
 shared/src/crypto/
 ├── index.ts              # Public API (deriveKey, encrypt, decrypt, hash)
 ├── argon2.ts             # Argon2id wrapper (argon2-browser)
-├── xchacha20.ts          # XChaCha20-Poly1305 wrapper (libsodium.js)
+├── xchacha20.ts          # XChaCha20-Poly1305 wrapper (libsodium-wrappers)
 ├── sha256.ts             # SHA-256 wrapper (@noble/hashes)
 ├── random.ts             # Secure random (crypto.getRandomValues)
 └── hex.ts                # Hex encode/decode utils
@@ -590,6 +590,8 @@ shared/
 
 **npm workspaces (monorepo)** — the shared core is a workspace package consumed by both web and mobile.
 
+**Note :** Use `"@vroooom/shared": "*"` (not `"workspace:*"`) — npm 12 resolves `*` to the local workspace version automatically.
+
 ```json
 // package.json (root)
 {
@@ -603,7 +605,7 @@ Then in `web/package.json` and `mobile/package.json` :
 ```json
 {
   "dependencies": {
-    "@vroooom/shared": "workspace:*"
+    "@vroooom/shared": "*"
   }
 }
 ```
@@ -655,7 +657,7 @@ Then in `web/package.json` and `mobile/package.json` :
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "libsodium.js": "^0.7.15",
+    "libsodium-wrappers": "^0.7.15",
     "argon2-browser": "^1.18.0",
     "@noble/hashes": "^1.4.0"
   },
@@ -665,8 +667,7 @@ Then in `web/package.json` and `mobile/package.json` :
     "vitest": "^2.0.0",
     "@vitest/coverage-v8": "^2.0.0",
     "fast-check": "^3.19.0",
-    "@biomejs/biome": "^2.0.0",
-    "@types/libsodium.js": "^0.7.0"
+    "@biomejs/biome": "^2.0.0"
   }
 }
 ```
@@ -676,7 +677,7 @@ Then in `web/package.json` and `mobile/package.json` :
 | Concern | Mitigation |
 |---------|------------|
 | **Supply chain** | `npm audit`, lockfile (`package-lock.json`), dependabot |
-| **Crypto review** | libsodium.js is audited; our wrappers are thin (no custom crypto) |
+| **Crypto review** | libsodium-wrappers is audited; our wrappers are thin (no custom crypto) |
 | **Timing attacks** | Use constant-time comparison (libsodium provides `crypto_verify_32`) |
 | **Random generation** | `crypto.getRandomValues()` (CSPRNG), never `Math.random()` |
 | **Memory safety** | MasterKey in JS variable (RAM), cleared on app close (`key.fill(0)` if possible) |
@@ -1263,7 +1264,7 @@ web/
     "@angular/router": "^22.0.0",
     "@angular/service-worker": "^22.0.0",
     "@angular/localize": "^22.0.0",
-    "@vroooom/shared": "workspace:*",
+    "@vroooom/shared": "*",
     "rxjs": "^7.8.0",
     "tslib": "^2.6.0",
     "zone.js": "^0.15.0"
@@ -1529,7 +1530,7 @@ export class SQLiteStore {
 
 **No crypto code in mobile/** — everything comes from shared core.
 
-**Note :** libsodium.js and argon2-browser work in React Native/Expo (WASM support).
+**Note :** libsodium-wrappers and argon2-browser work in React Native/Expo (WASM support).
 
 ### HTTP
 
@@ -1648,7 +1649,7 @@ mobile/                          # Created by create-expo-app
     "format": "biome format --write src"
   },
   "dependencies": {
-    "@vroooom/shared": "workspace:*",
+    "@vroooom/shared": "*",
     "@ng-native/components": "latest",
     "@ng-native/router": "latest",
     "@ng-native/device": "latest",
@@ -2410,7 +2411,7 @@ vroooom/                    # Root (monorepo)
 // web/package.json et mobile/package.json
 {
   "dependencies": {
-    "@vroooom/shared": "workspace:*"
+    "@vroooom/shared": "*"
   }
 }
 ```
