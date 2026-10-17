@@ -1,14 +1,14 @@
-import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, map, catchError, of } from 'rxjs';
-import { environment } from '../../../environments/environment';
+import { HttpClient } from "@angular/common/http";
+import { Injectable, inject } from "@angular/core";
+import { catchError, map, type Observable, of } from "rxjs";
+import { environment } from "../../../environments/environment";
 
 export interface ServerInfo {
   status: string;
   version: string;
 }
 
-@Injectable({ providedIn: 'root' })
+@Injectable({ providedIn: "root" })
 export class ApiService {
   private http = inject(HttpClient);
   private baseUrl = environment.apiUrl;
@@ -26,7 +26,7 @@ export class ApiService {
   getServerVersion(): Observable<string> {
     return this.getServerInfo().pipe(
       map((info) => info.version),
-      catchError(() => of('unknown'))
+      catchError(() => of("unknown")),
     );
   }
 }

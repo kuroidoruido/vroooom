@@ -1,9 +1,9 @@
 use std::sync::Arc;
 
 use axum::{
+    Json, Router,
     extract::{Path, State},
     routing::{get, put},
-    Json, Router,
 };
 
 use crate::error::AppResult;
@@ -17,9 +17,7 @@ pub fn router() -> Router<Arc<Storage>> {
         .route("/api/data/{blob_id}", put(store_blob))
 }
 
-async fn list_blobs(
-    State(storage): State<Arc<Storage>>,
-) -> AppResult<Json<BlobListResponse>> {
+async fn list_blobs(State(storage): State<Arc<Storage>>) -> AppResult<Json<BlobListResponse>> {
     // TODO: Get username from auth token/session
     let username = "default"; // Placeholder
     let blobs = storage.list_blobs(username).await?;

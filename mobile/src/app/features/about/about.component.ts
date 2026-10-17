@@ -1,11 +1,11 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
-import { SafeAreaProvider, SafeAreaView, ScrollView, Text, View } from '@ng-native/components';
-import { ApiService, ServerStatus } from '../../core/services/api.service';
-import { SHARED_VERSION } from '@vroooom/shared';
-import Constants from 'expo-constants';
+import { Component, inject, type OnInit, signal } from "@angular/core";
+import { SafeAreaProvider, SafeAreaView, ScrollView, Text, View } from "@ng-native/components";
+import { SHARED_VERSION } from "@vroooom/shared";
+import Constants from "expo-constants";
+import { ApiService, type ServerStatus } from "../../core/services/api.service";
 
 @Component({
-  selector: 'app-about',
+  selector: "app-about",
   imports: [SafeAreaProvider, SafeAreaView, ScrollView, Text, View],
   template: `
     <safe-area-provider>
@@ -182,17 +182,17 @@ import Constants from 'expo-constants';
         color: #8b8b96;
       }
     }
-  `
+  `,
 })
 export class AboutComponent implements OnInit {
   private api = inject(ApiService);
 
-  mobileVersion = Constants.expoConfig?.extra?.appVersion ?? '0.1.0';
+  mobileVersion = Constants.expoConfig?.extra?.appVersion ?? "0.1.0";
   sharedVersion = SHARED_VERSION;
-  apiUrl = Constants.expoConfig?.extra?.apiUrl ?? 'unknown';
+  apiUrl = Constants.expoConfig?.extra?.apiUrl ?? "unknown";
 
-  serverStatus = signal<ServerStatus>('loading');
-  serverVersion = signal('');
+  serverStatus = signal<ServerStatus>("loading");
+  serverVersion = signal("");
   serverError = signal<string | null>(null);
 
   ngOnInit(): void {

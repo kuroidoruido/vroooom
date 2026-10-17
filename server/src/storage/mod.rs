@@ -35,12 +35,7 @@ impl Storage {
     }
 
     /// Store a blob (hex string) for a user
-    pub async fn store_blob(
-        &self,
-        username: &str,
-        blob_id: &str,
-        data: &str,
-    ) -> AppResult<()> {
+    pub async fn store_blob(&self, username: &str, blob_id: &str, data: &str) -> AppResult<()> {
         let user_dir = self.user_dir(username)?;
         fs::create_dir_all(&user_dir).await?;
 
@@ -82,10 +77,10 @@ impl Storage {
 
         while let Some(entry) = entries.next_entry().await? {
             let path = entry.path();
-            if path.extension().and_then(|s| s.to_str()) == Some("enc") {
-                if let Some(stem) = path.file_stem().and_then(|s| s.to_str()) {
-                    blobs.push(stem.to_string());
-                }
+            if path.extension().and_then(|s| s.to_str()) == Some("enc")
+                && let Some(stem) = path.file_stem().and_then(|s| s.to_str())
+            {
+                blobs.push(stem.to_string());
             }
         }
 
@@ -93,6 +88,7 @@ impl Storage {
     }
 
     /// Delete a blob
+    #[allow(dead_code)] // Will be used when DELETE endpoint is implemented
     pub async fn delete_blob(&self, username: &str, blob_id: &str) -> AppResult<()> {
         let user_dir = self.user_dir(username)?;
         let blob_path = user_dir.join(format!("{}.enc", blob_id));
@@ -109,12 +105,7 @@ impl Storage {
     }
 
     /// Store user auth data (salt, authHash)
-    pub async fn store_auth(
-        &self,
-        username: &str,
-        salt: &str,
-        auth_hash: &str,
-    ) -> AppResult<()> {
+    pub async fn store_auth(&self, username: &str, salt: &str, auth_hash: &str) -> AppResult<()> {
         let user_dir = self.user_dir(username)?;
         fs::create_dir_all(&user_dir).await?;
 
@@ -129,21 +120,25 @@ impl Storage {
     pub async fn get_auth(&self, username: &str) -> AppResult<(String, String)> {
         let user_dir = self.user_dir(username)?;
 
-        let salt = fs::read_to_string(user_dir.join("salt")).await.map_err(|e| {
-            if e.kind() == std::io::ErrorKind::NotFound {
-                AppError::UserNotFound(username.to_string())
-            } else {
-                AppError::Storage(e)
-            }
-        })?;
+        let salt = fs::read_to_string(user_dir.join("salt"))
+            .await
+            .map_err(|e| {
+                if e.kind() == std::io::ErrorKind::NotFound {
+                    AppError::UserNotFound(username.to_string())
+                } else {
+                    AppError::Storage(e)
+                }
+            })?;
 
-        let auth_hash = fs::read_to_string(user_dir.join("authHash")).await.map_err(|e| {
-            if e.kind() == std::io::ErrorKind::NotFound {
-                AppError::UserNotFound(username.to_string())
-            } else {
-                AppError::Storage(e)
-            }
-        })?;
+        let auth_hash = fs::read_to_string(user_dir.join("authHash"))
+            .await
+            .map_err(|e| {
+                if e.kind() == std::io::ErrorKind::NotFound {
+                    AppError::UserNotFound(username.to_string())
+                } else {
+                    AppError::Storage(e)
+                }
+            })?;
 
         Ok((salt, auth_hash))
     }
@@ -174,7 +169,9 @@ mod tests {
         let storage = Storage::new(dir.path().to_path_buf());
         storage.init().await.unwrap();
 
-        let result = storage.store_blob("alice", "../../etc/passwd", "hack").await;
+        let result = storage
+            .store_blob("alice", "../../etc/passwd", "hack")
+            .await;
         assert!(result.is_err());
     }
 }

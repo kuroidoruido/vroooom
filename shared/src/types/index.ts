@@ -1,19 +1,19 @@
 // Types
 export type ExpenseKind =
-  | 'fuel'
-  | 'insurance'
-  | 'maintenance'
-  | 'toll'
-  | 'parking'
-  | 'fine'
-  | 'wash'
-  | 'credit'
-  | 'leasing'
-  | 'tax'
-  | 'delete';
+  | "fuel"
+  | "insurance"
+  | "maintenance"
+  | "toll"
+  | "parking"
+  | "fine"
+  | "wash"
+  | "credit"
+  | "leasing"
+  | "tax"
+  | "delete";
 
 export interface FuelExpense {
-  kind: 'fuel';
+  kind: "fuel";
   date: string; // ISO 8601
   mileage: number;
   amount: number; // cents
@@ -25,7 +25,7 @@ export interface FuelExpense {
 }
 
 export interface InsuranceExpense {
-  kind: 'insurance';
+  kind: "insurance";
   date: string;
   amount: number;
   company: string;
@@ -35,30 +35,30 @@ export interface InsuranceExpense {
 }
 
 export interface MaintenanceExpense {
-  kind: 'maintenance';
+  kind: "maintenance";
   date: string;
   mileage?: number;
   amount: number;
   description: string;
-  category: 'oil' | 'tires' | 'brakes' | 'other';
+  category: "oil" | "tires" | "brakes" | "other";
 }
 
 export type SimpleExpense = {
-  kind: 'toll' | 'parking' | 'fine' | 'wash' | 'tax';
+  kind: "toll" | "parking" | "fine" | "wash" | "tax";
   date: string;
   amount: number;
   description?: string;
 };
 
 export type CreditExpense = {
-  kind: 'credit' | 'leasing';
+  kind: "credit" | "leasing";
   date: string;
   amount: number;
   description?: string;
 };
 
 export type DeleteExpense = {
-  kind: 'delete';
+  kind: "delete";
   targetId: string;
 };
 

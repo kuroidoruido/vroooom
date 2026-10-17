@@ -5,9 +5,9 @@
  * All functions are async (WASM initialization).
  */
 
-import _sodium from 'libsodium-wrappers';
-import argon2 from 'argon2-browser';
-import { sha256 } from '@noble/hashes/sha256';
+import { sha256 } from "@noble/hashes/sha256";
+import argon2 from "argon2-browser";
+import _sodium from "libsodium-wrappers";
 
 // Re-export for convenience
 export { sha256 };
@@ -25,10 +25,7 @@ async function getSodium(): Promise<typeof _sodium> {
  * Derive MasterKey from password using Argon2id
  * Parameters: m=21MB (21504 KiB), t=2, p=2 (mobile-optimized)
  */
-export async function deriveKey(
-  password: string,
-  salt: Uint8Array
-): Promise<Uint8Array> {
+export async function deriveKey(password: string, salt: Uint8Array): Promise<Uint8Array> {
   const result = await argon2.hash({
     pass: password,
     salt: salt,
@@ -56,7 +53,7 @@ export function computeAuthHash(masterKey: Uint8Array): string {
  */
 export async function encrypt(
   key: Uint8Array,
-  plaintext: string
+  plaintext: string,
 ): Promise<{ nonce: Uint8Array; ciphertext: Uint8Array; tag: Uint8Array }> {
   const sodium = await getSodium();
   const nonce = sodium.randombytes_buf(sodium.crypto_aead_xchacha20poly1305_ietf_NPUBBYTES);
@@ -67,7 +64,7 @@ export async function encrypt(
     null, // no additional data
     null, // no nonce (auto-generated)
     nonce,
-    key
+    key,
   );
 
   // encrypted = ciphertext + tag (16 bytes)
@@ -85,7 +82,7 @@ export async function decrypt(
   key: Uint8Array,
   nonce: Uint8Array,
   ciphertext: Uint8Array,
-  tag: Uint8Array
+  tag: Uint8Array,
 ): Promise<string> {
   const sodium = await getSodium();
 
@@ -99,7 +96,7 @@ export async function decrypt(
     encrypted,
     null, // no additional data
     nonce,
-    key
+    key,
   );
 
   return sodium.to_string(decrypted);
@@ -109,17 +106,17 @@ export async function decrypt(
  * Generate secure random bytes
  */
 export function randomBytes(length: number): Uint8Array {
-  if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
+  if (typeof crypto !== "undefined" && crypto.getRandomValues) {
     return crypto.getRandomValues(new Uint8Array(length));
   }
-  throw new Error('Secure random not available');
+  throw new Error("Secure random not available");
 }
 
 // Hex utils
 export function bytesToHex(bytes: Uint8Array): string {
   return Array.from(bytes)
-    .map((b) => b.toString(16).padStart(2, '0'))
-    .join('');
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
 }
 
 export function hexToBytes(hex: string): Uint8Array {
@@ -133,10 +130,7 @@ export function hexToBytes(hex: string): Uint8Array {
 /**
  * Combine nonce + ciphertext + tag into a single hex string for storage
  */
-export function encryptToHex(
-  key: Uint8Array,
-  plaintext: string
-): Promise<string> {
+export function encryptToHex(key: Uint8Array, plaintext: string): Promise<string> {
   return encrypt(key, plaintext).then(({ nonce, ciphertext, tag }) => {
     const combined = new Uint8Array(nonce.length + ciphertext.length + tag.length);
     combined.set(nonce, 0);
@@ -149,10 +143,7 @@ export function encryptToHex(
 /**
  * Decrypt from a hex string (nonce + ciphertext + tag)
  */
-export async function decryptFromHex(
-  key: Uint8Array,
-  hex: string
-): Promise<string> {
+export async function decryptFromHex(key: Uint8Array, hex: string): Promise<string> {
   const bytes = hexToBytes(hex);
   const nonce = bytes.slice(0, 24);
   const tag = bytes.slice(-16);

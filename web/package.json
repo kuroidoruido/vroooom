@@ -26,9 +26,10 @@
     "tslib": "^2.3.0"
   },
   "devDependencies": {
-    "@angular/build": "^22.2.2",
-    "@angular/cli": "^22.2.2",
+    "@angular/build": "^22.2.3",
+    "@angular/cli": "^22.2.3",
     "@angular/compiler-cli": "^22.2.0",
+    "@angular/platform-browser-dynamic": "^22.2.3",
     "@biomejs/biome": "^2.0.0",
     "@playwright/test": "^1.45.0",
     "jsdom": "^30.0.0",

@@ -1,11 +1,11 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
-import { RouterLink } from '@angular/router';
-import { ApiService } from '../../core/services/api.service';
-import { SHARED_VERSION } from '@vroooom/shared';
-import { environment } from '../../../environments/environment';
+import { Component, inject, type OnInit, signal } from "@angular/core";
+import { RouterLink } from "@angular/router";
+import { SHARED_VERSION } from "@vroooom/shared";
+import { environment } from "../../../environments/environment";
+import { ApiService } from "../../core/services/api.service";
 
 @Component({
-  selector: 'app-about',
+  selector: "app-about",
   imports: [RouterLink],
   template: `
     <div class="about-container">
@@ -145,14 +145,14 @@ import { environment } from '../../../environments/environment';
       color: var(--color-text-secondary, #666);
       font-size: 14px;
     }
-  `
+  `,
 })
 export class AboutComponent implements OnInit {
   private api = inject(ApiService);
 
   webVersion = environment.appVersion;
   sharedVersion = SHARED_VERSION;
-  serverVersion = signal('loading');
+  serverVersion = signal("loading");
 
   ngOnInit(): void {
     this.api.getServerVersion().subscribe((version) => {

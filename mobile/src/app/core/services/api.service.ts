@@ -1,21 +1,21 @@
-import { Injectable } from '@angular/core';
-import { Observable, map, catchError, of, from, switchMap, tap } from 'rxjs';
-import Constants from 'expo-constants';
+import { Injectable } from "@angular/core";
+import Constants from "expo-constants";
+import { catchError, from, map, type Observable, of, switchMap, tap } from "rxjs";
 
 export interface ServerInfo {
   status: string;
   version: string;
 }
 
-export type ServerStatus = 'loading' | 'ok' | 'offline' | 'error';
+export type ServerStatus = "loading" | "ok" | "offline" | "error";
 
-@Injectable({ providedIn: 'root' })
+@Injectable({ providedIn: "root" })
 export class ApiService {
   private baseUrl: string;
 
   constructor() {
-    this.baseUrl = Constants.expoConfig?.extra?.apiUrl ?? 'http://localhost:8080/api';
-    console.log('[ApiService] Base URL:', this.baseUrl);
+    this.baseUrl = Constants.expoConfig?.extra?.apiUrl ?? "http://localhost:8080/api";
+    console.log("[ApiService] Base URL:", this.baseUrl);
   }
 
   /**
@@ -23,19 +23,19 @@ export class ApiService {
    */
   getServerInfo(): Observable<ServerInfo> {
     const url = `${this.baseUrl}/health`;
-    console.log('[ApiService] Fetching:', url);
+    console.log("[ApiService] Fetching:", url);
 
     return from(fetch(url)).pipe(
-      tap((res) => console.log('[ApiService] Response status:', res.status)),
+      tap((res) => console.log("[ApiService] Response status:", res.status)),
       switchMap((res) => {
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         return from(res.json() as Promise<ServerInfo>);
       }),
-      tap((info) => console.log('[ApiService] Server info:', info)),
+      tap((info) => console.log("[ApiService] Server info:", info)),
       catchError((err) => {
-        console.error('[ApiService] Error:', err.message, err);
+        console.error("[ApiService] Error:", err.message, err);
         throw err;
-      })
+      }),
     );
   }
 
@@ -44,14 +44,14 @@ export class ApiService {
    */
   getServerVersion(): Observable<{ status: ServerStatus; version: string; error?: string }> {
     return this.getServerInfo().pipe(
-      map((info) => ({ status: 'ok' as const, version: info.version })),
+      map((info) => ({ status: "ok" as const, version: info.version })),
       catchError((err) =>
         of({
-          status: 'error' as const,
-          version: 'error',
-          error: err.message || 'Unknown error',
-        })
-      )
+          status: "error" as const,
+          version: "error",
+          error: err.message || "Unknown error",
+        }),
+      ),
     );
   }
 }

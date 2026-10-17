@@ -20,17 +20,19 @@ async fn main() -> anyhow::Result<()> {
     // Load .env file (dev only)
     dotenvy::dotenv().ok();
 
+    // Load configuration
+    let config = Config::from_env();
+
     // Initialize logging
     tracing_subscriber::registry()
         .with(
-            tracing_subscriber::EnvFilter::try_from_default_env()
-                .unwrap_or_else(|_| "vroooom_server=info,tower_http=info".into()),
+            tracing_subscriber::EnvFilter::try_from_default_env().unwrap_or_else(|_| {
+                format!("vroooom_server={},tower_http=info", config.log_level).into()
+            }),
         )
         .with(tracing_subscriber::fmt::layer().json())
         .init();
 
-    // Load configuration
-    let config = Config::from_env();
     tracing::info!(?config, "Starting vroooom-server");
 
     // Initialize storage
@@ -59,7 +61,7 @@ async fn main() -> anyhow::Result<()> {
     // Build router
     let app = Router::new()
         .merge(routes::health_router())
-        .merge(routes::auth::router())
+        .merge(routes::auth::router(config.feature_account_creation))
         .merge(routes::data::router())
         .merge(routes::sync::router())
         .layer(cors)

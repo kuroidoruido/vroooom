@@ -2,6 +2,14 @@ import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
+  esbuild: {
+    tsconfigRaw: {
+      compilerOptions: {
+        experimentalDecorators: true,
+        emitDecoratorMetadata: true,
+      },
+    },
+  },
   resolve: {
     alias: {
       '@vroooom/shared': fileURLToPath(new URL('../shared/src/index.ts', import.meta.url)),

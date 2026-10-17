@@ -10,7 +10,7 @@
  */
 
 // Types
-export * from './types/index.js';
+export * from "./types/index.js";
 
 // TODO: Re-enable when libsodium-wrappers ESM issue is fixed
 // Crypto
@@ -20,7 +20,7 @@ export * from './types/index.js';
 // export * from './sync/index.js';
 
 // Utils
-export * from './utils/index.js';
+export * from "./utils/index.js";
 
 // Version
-export * from './version.js';
+export * from "./version.js";

@@ -13,7 +13,7 @@ export function now(): number {
  * Generate a unique ID (UUID v4-like, using crypto.randomUUID if available)
  */
 export function generateId(): string {
-  if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+  if (typeof crypto !== "undefined" && crypto.randomUUID) {
     return crypto.randomUUID();
   }
   // Fallback: timestamp + random

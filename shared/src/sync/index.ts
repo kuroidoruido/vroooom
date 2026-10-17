@@ -8,16 +8,16 @@
 export async function computeHash(
   parentId: string | null,
   data: unknown,
-  timestamp: number
+  timestamp: number,
 ): Promise<string> {
-  const input = `${parentId ?? 'null'}${JSON.stringify(data)}${timestamp}`;
+  const input = `${parentId ?? "null"}${JSON.stringify(data)}${timestamp}`;
   const encoder = new TextEncoder();
   const bytes = encoder.encode(input);
-  const hashBuffer = await crypto.subtle.digest('SHA-256', bytes);
+  const hashBuffer = await crypto.subtle.digest("SHA-256", bytes);
   const hashArray = new Uint8Array(hashBuffer);
   return Array.from(hashArray)
-    .map((b) => b.toString(16).padStart(2, '0'))
-    .join('');
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
 }
 
 export interface Conflict {
@@ -29,7 +29,7 @@ export interface Conflict {
  * Detect forks in expense chain (two expenses with same parentId)
  */
 export function detectFork<T extends { id: string; parentId: string | null }>(
-  expenses: T[]
+  expenses: T[],
 ): Conflict[] {
   const parentMap = new Map<string, string[]>();
 
@@ -61,7 +61,7 @@ export interface ResolutionResult {
  */
 export function resolveByTimestamp<T extends { id: string; timestamp: number }>(
   branchA: T,
-  branchB: T
+  branchB: T,
 ): ResolutionResult {
   if (branchA.timestamp >= branchB.timestamp) {
     return { winner: branchA.id, loser: branchB.id };

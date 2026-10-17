@@ -1,16 +1,16 @@
 // Expo's runtime: its fetch, whose response streams a body, and URL, TextDecoderStream and
 // structuredClone. Metro runs it before this file only when something imports it, and nothing
 // else does in a release build, which would then get React Native's fetch, with no body.
-import 'expo';
-import { AppRegistry, Image, Platform, processColor } from 'react-native';
-import { mount } from '@ng-native/platform';
-import { currentConditions, deviceTokens, watchConditions } from '@ng-native/device';
-import { getFabricUIManager, registerPlatformComponents } from '@ng-native/fabric';
-import { App } from './app/app.ts';
+import "expo";
+import { currentConditions, deviceTokens, watchConditions } from "@ng-native/device";
+import { getFabricUIManager, registerPlatformComponents } from "@ng-native/fabric";
+import { mount } from "@ng-native/platform";
+import { AppRegistry, Image, Platform, processColor } from "react-native";
+import { App } from "./app/app.ts";
 
 registerPlatformComponents(Platform.OS);
 
-AppRegistry.registerRunnable('main', ({ rootTag }: { rootTag: number | string }) => {
+AppRegistry.registerRunnable("main", ({ rootTag }: { rootTag: number | string }) => {
   const app = mount(Number(rootTag), App, getFabricUIManager(), {
     // Colours, as the integers the platform wants.
     processColor,

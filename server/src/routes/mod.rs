@@ -2,7 +2,7 @@ pub mod auth;
 pub mod data;
 pub mod sync;
 
-use axum::{routing::get, Router};
+use axum::{Router, routing::get};
 use std::sync::Arc;
 
 use crate::models::HealthResponse;

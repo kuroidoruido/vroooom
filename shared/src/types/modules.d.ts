@@ -1,4 +1,4 @@
-declare module 'argon2-browser' {
+declare module "argon2-browser" {
   export interface Argon2Options {
     pass: string | Uint8Array;
     salt: string | Uint8Array;
@@ -33,7 +33,8 @@ declare module 'argon2-browser' {
   export default argon2;
 }
 
-declare module 'libsodium-wrappers' {
+declare module "libsodium-wrappers" {
+  // biome-ignore lint/suspicious/noExplicitAny: third-party module declaration
   const sodium: any;
   export default sodium;
 }
